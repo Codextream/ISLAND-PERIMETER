@@ -1,20 +1,21 @@
-# 3 SUM
+# ISLAND PERIMETER
 
-Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+You are given a map in form of a two-dimensional integer grid where 1 represents land and 0 represents water.
 
-### Note:
+Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).
 
-The solution set must not contain duplicate triplets.
+The island doesn't have "lakes" (water inside that isn't connected to the water around the island). One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.
 
 ### Example:
 <pre>
-Given array nums = [-1, 0, 1, 2, -1, -4],
+Input:
+[[0,1,0,0],
+ [1,1,1,0],
+ [0,1,0,0],
+ [1,1,0,0]]
 
-A solution set is:
-[
-  [-1, 0, 1],
-  [-1, -1, 2]
-]
+Output: 16
+
 </pre>
 
 ### Solution:
@@ -24,26 +25,22 @@ A solution set is:
 
 class Solution {
 public:
-    vector<vector<int>> threeSum(vector<int>& nums) {
-        sort(nums.begin(),nums.end());
-        int n = nums.size();
-        vector<vector<int>> ans;
-        for(int i=0;i<n-2;i++){
-               if(i>0 && (nums[i]==nums[i-1]) )continue;
-               int l=i+1, r= n-1;
-               while(l<r){
-                   int sum =nums[i]+nums[l]+nums[r];
-                   if(sum<0) l++;
-                   else if(sum>0)r--;
-                   else {
-                       ans.push_back(vector<int>{nums[i],nums[l],nums[r]});
-                       while(l+1<r && nums[l]==nums[l+1])l++;
-                       while(l<r-1 && nums[r]==nums[r-1]) r--;
-                       l++; r--;
-                   }
-               }
+    int islandPerimeter(vector<vector<int>> &grid) {
+        if (grid.empty()) return 0;
+        int perimeter = 0;
+        int ros = grid.size();
+        int cos = grid[0].size();
+        for (int r = 0; r < ros; ++r) {
+            for (int c = 0; c < cos; ++c) {
+                if (grid[r][c]) {
+                    if (r == 0 || !grid[r-1][c]) ++perimeter;
+                    if ((r == ros - 1) || !grid[r+1][c]) ++perimeter;
+                    if ((c == cos - 1) || !grid[r][c+1]) ++perimeter;
+                    if ((c == 0) || (!grid[r][c-1])) ++perimeter;
+                }
+            }
         }
-        return ans;
+        return perimeter;
     }
 };
 
